@@ -3,11 +3,9 @@ import decodeJWT from 'jwt-decode';
 
 class Auth {
   isLoggedIn() {
-    if (b2cauth.getAccessToken()) {
-      return true;
-    }
-    return false;
+    return !!b2cauth.getAccessToken();
   }
+
 
   logout() {
     b2cauth.signOut();

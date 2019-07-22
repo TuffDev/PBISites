@@ -51,7 +51,7 @@ const tableIcons = {
   ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref}/>)
 };
 
-class Users extends Component {
+class Sites extends Component {
   constructor(props) {
     super(props);
     this.API = new API();
@@ -130,4 +130,4 @@ class Users extends Component {
 
 }
 
-export default Users;
+export default Sites;

@@ -89,33 +89,37 @@ class API {
   }
 
   addUser(userData) { // returns a boolean
-    this.putData('https://pbisite.azure-api.net/users', userData)
-      .then(data => {
-        if (data.ok) {
-          return true;
-        } else {
-          throw new Error('Something went wrong adding the user');
-        }
-      })
-      .catch(error => {
-        console.error(error);
-        return false;
-      })
+    return (
+      this.putData('https://pbisite.azure-api.net/users', userData)
+        .then(data => {
+          if (data.ok) {
+            return true;
+          } else {
+            throw new Error('Something went wrong adding the user');
+          }
+        })
+        .catch(error => {
+          console.error(error);
+          return false;
+        })
+    )
   }
 
   removeUser(userKey) {
-    this.deleteData('https://pbisite.azure-api.net/users', {"UserKey": userKey})
-      .then(data => {
-        if (data.ok) {
-          return true;
-        } else {
-          throw new Error('Something went wrong removing the user');
-        }
-      })
-      .catch(error => {
-        console.error(error);
-        return false;
-      })
+    return (
+      this.deleteData('https://pbisite.azure-api.net/users', {"UserKey": userKey})
+        .then(data => {
+          if (data.ok) {
+            return true;
+          } else {
+            throw new Error('Something went wrong removing the user');
+          }
+        })
+        .catch(error => {
+          console.error(error);
+          return false;
+        })
+    )
   }
 }
 

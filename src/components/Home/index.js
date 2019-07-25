@@ -6,6 +6,7 @@ import Users from "../../Users";
 import React from "react";
 import authentication from 'react-azure-adb2c';
 import {makeStyles} from "@material-ui/core";
+import Sites from './../../components/Sites';
 import Auth from './../../Auth';
 
 const auth = new Auth();
@@ -34,19 +35,10 @@ export default Home => (
 
       <Grid item xs={12}>
 
-        <Paper className={useStyles().paper}>
-          <SignUp currentUser={auth.currentUser()}/>
-        </Paper>
+           <Sites />
 
       </Grid>
 
-      <Grid item xs={12}>
-
-        <Paper className={useStyles().paper}>
-          <Users authToken={auth.getToken()}/>
-        </Paper>
-
-      </Grid>
 
     </Grid>
 

@@ -1,17 +1,7 @@
-/* eslint-disable no-script-url */
-
-import React, {Component} from 'react';
-import Link from '@material-ui/core/Link';
-import {makeStyles} from '@material-ui/core/styles';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import Title from './Title';
 import MaterialTable from "material-table";
-import API from './API';
-import DetailsPane from './components/DetailsPane';
+import Container from '@material-ui/core/Container';
+import React, {Component} from "react";
+import API from './../../API';
 
 import {forwardRef} from 'react';
 
@@ -51,7 +41,7 @@ const tableIcons = {
   ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref}/>)
 };
 
-class Users extends Component {
+class SiteDetailPane extends Component {
   constructor(props) {
     super(props);
     this.API = new API();
@@ -61,7 +51,7 @@ class Users extends Component {
   }
 
   componentWillMount() {
-    this.API.getUsers()
+    this.API.getDetails(this.props.UserKey)
       .then((data) => {
           this.setState({jsonData: data});
         }
@@ -72,63 +62,27 @@ class Users extends Component {
     if (!this.state.jsonData) {
       return <div>Loading...</div>
     }
-
     return (
+      <Container>
       <MaterialTable
         columns={[
-          {title: 'First Name', field: 'FirstName'},
-          {title: 'Surname', field: 'LastName'},
-          {title: 'Role', field: 'Role'},
-          {title: 'Email', field: 'Email'},
-          {title: "UserID", field: "UserKey"},  // todo remove, dev purposes only
+          {title: 'Site Name', field: 'SiteGUID'},
+          {title: 'GUID', field: 'Site'},
+          {title: 'ID', field: 'SiteKey'},
         ]}
-        data={this.state.jsonData}  //todo make this a Promise
-        icons={tableIcons}
-        title="Manage Users"
-        detailPanel={[
-          {
-            tooltip: "Show Sites",
-            render: rowData => <DetailsPane UserKey={rowData.UserKey}/>
-          }
-        ]}
-        onRowClick={(event, rowData, togglePanel) => togglePanel()}
-        editable={{
-          onRowAdd: newData =>  // todo ensure clientID/Tenant are set so this succeeds. return error if not
-            new Promise((resolve, reject) => {
-              this.API.addUser(newData)
-                .then(success => {
-                  if (success) {
-                    let data = this.state.jsonData;
-                    data.push(newData);
-                    this.setState({jsonData: data}, () => resolve());
-                  } else reject();
-                })
-            }),
-          onRowDelete: oldData =>
-            new Promise((resolve, reject) => {
-              this.API.removeUser(oldData.UserKey)
-                .then(success => {
-                  if (success) {
-                    let data = this.state.jsonData;
-                    const index = data.indexOf(oldData);
-                    data.splice(index, 1);
-                    this.setState({jsonData: data}, () => resolve());
-                  } else reject();
-                })
-            })
+        data={this.state.jsonData}  // replace with Promise
+        options={{
+          search: false,
+          padding: "dense",
+          showTitle: false,
+          toolbar: false,
+          paging: false,
         }}
-        localization={{
-          body: {
-            editRow: {
-              deleteText: 'Are you sure?'
-            }
-          }
-        }}
-
       />
-    );
+      </Container>
+    )
   }
 
 }
 
-export default Users;
+export default SiteDetailPane;

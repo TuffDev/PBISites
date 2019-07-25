@@ -13,7 +13,7 @@ class API {
         'Authorization': 'Bearer ' + this.auth.getToken(),
       },
     })
-      .then(response => response.json());
+
   }
 
   postData(url = '', data = {}) {
@@ -57,7 +57,7 @@ class API {
     return (
       this.getData('https://pbisite.azure-api.net/users')
         .then((data) => {
-          return data;
+          return data.json();
         })
         .catch(error => console.error(error))
     )
@@ -121,6 +121,101 @@ class API {
         })
     )
   }
+
+  getSites() {
+    return (
+      this.getData('https://pbisite.azure-api.net/sites')
+        .then(data => {
+          console.log("data: " + JSON.stringify(data));
+          if (data.ok) {
+            return data.json();
+          } else {
+            throw new Error('Something went wrong retrieving sites');
+          }
+        })
+        .catch(error => {
+          console.error(error);
+          return null;
+        })
+    )
+  }
+
+  getEmbedToken(SiteKey) {
+    return (
+      this.postData('https://pbisite.azure-api.net/embed', {SiteKey: SiteKey})
+        .then(data => {
+          console.log("data: " + JSON.stringify(data));
+          if (data.ok) {
+            return data.json();
+          } else {
+            throw new Error('Something went wrong retrieving embed token');
+          }
+        })
+        .catch(error => {
+          console.error(error);
+          return null;
+        })
+    )
+  }
+
+  removeSite(SiteKey) {
+    return (
+      this.deleteData('https://pbisite.azure-api.net/sites', {SiteKey: SiteKey})
+        .then(data => {
+          if (data.ok) {
+            return true;
+          } else {
+            throw new Error('Something went wrong removing the site');
+          }
+        })
+        .catch(error => {
+          console.error(error);
+          return false;
+        })
+    )
+  }
+
+  createApp(tenant, clientId, clientSecret) {
+    let data = {
+      tenant: tenant,
+      clientid: clientId,
+      clientsecret: clientSecret
+    };
+    return (
+      this.putData('https://pbisite.azure-api.net/apps', data)
+        .then(data => {
+          if (data.ok) {
+            return true;
+          } else {
+            throw new Error('Something went wrong creating the App');
+          }
+        })
+        .catch(error => {
+          console.error(error);
+          return false;
+        })
+    )
+  }
+
+  getApp() {
+    return (
+      this.getData('https://pbisite.azure-api.net/apps')
+        .then(data => {
+          console.log("data: " + JSON.stringify(data));
+          if (data.ok) {
+            return data.json();
+          } else {
+            throw new Error('Something went wrong retrieving sites');
+          }
+        })
+        .catch(error => {
+          console.error(error);
+          return null;
+        })
+    )
+  }
+
+
 }
 
 export default API;

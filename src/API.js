@@ -140,6 +140,24 @@ class API {
     )
   }
 
+  addSiteUser(UserKey, SiteKey) {
+    return (
+      this.postData('https://pbisite.azure-api.net/sites/users', {sitekey: SiteKey, userkey: UserKey})
+        .then(data => {
+          console.log("data: " + JSON.stringify(data));
+          if (data.ok) {
+            return data.json();
+          } else {
+            throw new Error('Something went wrong adding site user');
+          }
+        })
+        .catch(error => {
+          console.error(error);
+          return null;
+        })
+    )
+  }
+
   getEmbedToken(SiteKey) {
     return (
       this.postData('https://pbisite.azure-api.net/embed', {SiteKey: SiteKey})
@@ -213,6 +231,22 @@ class API {
           return null;
         })
     )
+  }
+
+  uploadFile(file) {
+    let url = "https://pbisite.azure-api.net/sites/files";
+    let data = new FormData();
+    data.append('file', file);
+    return fetch(url, {
+      method: 'POST',
+      contentType: 'multipart/form-data',
+      mimeType: 'multipart/form-data',
+      processData: false,
+      headers: {
+        'Authorization': 'Bearer ' + this.auth.getToken(),
+      },
+      body: data,
+    })
   }
 
 

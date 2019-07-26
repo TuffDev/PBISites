@@ -85,6 +85,9 @@ class Users extends Component {
         data={this.state.jsonData}  //todo make this a Promise
         icons={tableIcons}
         title="Manage Users"
+        options={{
+          pageSize: 10,
+        }}
         detailPanel={[
           {
             tooltip: "Show Sites",

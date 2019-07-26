@@ -7,9 +7,13 @@
     "@material-ui/icons": "^4.2.1",
     "jwt-decode": "^2.2.0",
     "material-table": "^1.40.1",
+    "powerbi-client": "^2.7.5",
+    "powerbi-report-component": "^1.2.0",
     "react": "^16.8.6",
     "react-azure-adb2c": "^0.2.0",
     "react-dom": "^16.8.6",
+    "react-modal": "^3.9.1",
+    "react-powerbi": "^0.4.1",
     "react-router-dom": "^5.0.1",
     "react-scripts": "3.0.1",
     "recharts": "^1.6.2"

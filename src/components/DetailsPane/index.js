@@ -4,6 +4,7 @@ import React, {Component} from "react";
 import API from './../../API';
 
 import {forwardRef} from 'react';
+import {withStyles} from '@material-ui/core/styles';
 
 import AddBox from '@material-ui/icons/AddBox';
 import ArrowUpward from '@material-ui/icons/ArrowUpward';
@@ -20,6 +21,14 @@ import Remove from '@material-ui/icons/Remove';
 import SaveAlt from '@material-ui/icons/SaveAlt';
 import Search from '@material-ui/icons/Search';
 import ViewColumn from '@material-ui/icons/ViewColumn';
+import IconButton from '@material-ui/core/IconButton';
+import Select from '@material-ui/core/Select'
+import MenuItem from '@material-ui/core/MenuItem';
+import Modal from "@material-ui/core/Modal";
+import Paper from "@material-ui/core/Paper";
+import Typography from "@material-ui/core/Typography";
+import Divider from "@material-ui/core/Divider";
+import Button from "@material-ui/core/Button";
 
 const tableIcons = {
   Add: forwardRef((props, ref) => <AddBox {...props} ref={ref}/>),
@@ -41,12 +50,39 @@ const tableIcons = {
   ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref}/>)
 };
 
+const classes = theme => ({
+  root: {
+    display: 'flex',
+  },
+  container: {
+    paddingTop: theme.spacing(4),
+    paddingBottom: theme.spacing(4),
+  },
+  paper: {
+    position: 'absolute',
+    width: '100',
+    backgroundColor: theme.palette.background.paper,
+    padding: theme.spacing(2, 4, 4),
+    outline: 'none',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+  },
+  submit: {
+    margin: theme.spacing(3, 0, 2),
+    backgroundColor: '#6c757f',
+  },
+
+});
+
 class DetailsPane extends Component {
   constructor(props) {
     super(props);
     this.API = new API();
     this.state = {
-      jsonData: null
+      jsonData: null,
+      sites: [],
+      modalIsOpen: false,
     };
   }
 
@@ -55,7 +91,14 @@ class DetailsPane extends Component {
       .then((data) => {
           this.setState({jsonData: data});
         }
-      )
+      );
+    this.API.getSites()
+      .then((data) => this.setState({sites: data}));
+  }
+
+  addUserSite(event){
+    event.preventDefault();
+    this.API.addSiteUser(this.props.UserKey, )
   }
 
   render() {
@@ -64,25 +107,54 @@ class DetailsPane extends Component {
     }
     return (
       <Container>
-      <MaterialTable
-        columns={[
-          {title: 'Site Name', field: 'SiteGUID'},
-          {title: 'GUID', field: 'Site'},
-          {title: 'ID', field: 'SiteKey'},
-        ]}
-        data={this.state.jsonData}
-        options={{
-          search: false,
-          padding: "dense",
-          showTitle: false,
-          toolbar: false,
-          paging: false,
-        }}
-      />
+        <IconButton aria-label="add" onClick={this.setState({modalIsOpen: true})}>
+          <AddBox/>
+        </IconButton>
+        <MaterialTable
+          columns={[
+            {title: 'Site Name', field: 'Site'},
+            {title: 'GUID', field: 'SiteID'},
+            {title: 'ID', field: 'SiteKey'},
+          ]}
+          data={this.state.jsonData}
+          options={{
+            search: false,
+            padding: "dense",
+            showTitle: false,
+            toolbar: false,
+            paging: false,
+          }}
+        />
+
+        <Modal
+          aria-labelledby="simple-modal-title"
+          aria-describedby="simple-modal-description"
+          open={this.state.modalIsOpen}
+          onClose={() => this.setState({modalIsOpen: false})}
+        >
+          <Paper className={classes.paper}>
+            <Typography variant="h6">Upload your site file</Typography>
+            <Divider/>
+            <form className={classes.container} onSubmit={this.addUserSite}>
+              <Select
+
+              >
+              </Select>
+              <Button
+                disabled={false}
+                type="submit"
+                variant="contained"
+                className={classes.submit}
+              >
+                Submit
+              </Button>
+            </form>
+          </Paper>
+        </Modal>
       </Container>
     )
   }
 
 }
 
-export default DetailsPane
+export default withStyles(classes)(DetailsPane)

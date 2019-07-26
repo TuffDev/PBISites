@@ -120,9 +120,12 @@ class Sites extends Component {
 
   handleUpload = event => {
     event.preventDefault();
-    const data = this.state.jsonData;
-    data.push({Site: this.state.file.name, SiteID: "test site", SiteKey: 5});
-    this.setState({modalIsOpen: false, file: null});
+    const newData = this.state.jsonData;
+    this.API.uploadFile(this.state.file)
+      .then( (data) => {
+        //newData.push({Site: this.state.file.name, SiteID: "test site", SiteKey: 5});
+        //this.setState({modalIsOpen: false, file: null});
+      })
   };
 
   render() {

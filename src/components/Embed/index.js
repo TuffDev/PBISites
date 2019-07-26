@@ -7,6 +7,7 @@ import AppBar from "@material-ui/core/AppBar";
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
+import Toolbar from './Toolbar';
 
 import * as pbi from 'powerbi-client';
 
@@ -46,13 +47,14 @@ class Embed extends Component {
         embedUrl: "https://app.powerbi.com/reportEmbed",
         accessToken: null
       },
-      pages: [],
+      pages: [''],
+      currentPage: 0,
       error: false,
     }
   }
 
   componentWillMount() {
-    this.API.getEmbedToken(this.props.SiteKey)
+    this.API.getEmbedToken(parseInt(this.props.SiteKey))
       .then(data => {
           if (data) {
             this.setState({
@@ -69,10 +71,6 @@ class Embed extends Component {
       )
   }
 
-  handleTabClick = (event, pageNum) => {
-    this.report.setPage(this.state.pages[pageNum].name);
-  };
-
   handleReportLoad = (report) => {
     console.log(report);
   };
@@ -82,7 +80,7 @@ class Embed extends Component {
 
     report.getPages()
       .then((pages) => {
-        if (this.state.pages.length === 0) { // todo decouple from State.  currently re-renders on report load
+        if (this.state.pages[0] === '') { // todo decouple from State.  currently re-renders on report load
           this.setState({pages: pages.filter((page) => page.visibility === 0)});  // only show visible tabs
         }
       })
@@ -95,17 +93,24 @@ class Embed extends Component {
     const {classes} = this.props;
 
     const isReady = !!this.report;
+    let currentPage = 0;
 
     return (
       <div>
         <AppBar position="static">
-          <Tabs value={0} onChange={this.handleTabClick} aria-label="simple tabs example">
-            {this.state.pages.map( (page) => {
+          <Tabs
+            value={0}
+            onChange={(event, pageNum) => this.report.setPage(this.state.pages[pageNum].name)}
+            aria-label="simple-tabs"
+            variant="scrollable"
+            scrollButtons="auto"
+          >
+            {this.state.pages.map((page) => {
               return (<Tab label={page.displayName}/>);
             })}
           </Tabs>
         </AppBar>
-        < Report
+        <Report
           embedId={this.state.embedConfig.id}
           embedUrl={this.state.embedConfig.embedUrl}
           accessToken={this.state.embedConfig.accessToken}
@@ -113,16 +118,16 @@ class Embed extends Component {
           embedType="report"
           permissions="All"
           style={{
-              height: 800
+            height: 800
           }}
           onRender={this.handleReportRender}
           onLoad={this.handleReportLoad}
           extraSettings={{
-              filterPaneEnabled: false,
-              navContentPaneEnabled:
-                false,
-              background:
-              pbi.models.BackgroundType.Transparent,
+            filterPaneEnabled: false,
+            navContentPaneEnabled:
+              false,
+            background:
+            pbi.models.BackgroundType.Transparent,
 
           }}
         />

@@ -181,7 +181,7 @@ export default function Dashboard() {
         <main className={classes.content}>
 
           <div className={classes.appBarSpacer}/>
-          <Routes />
+          <Routes role={auth.currentUser().emails[0]}/> // todo get User role from API (give it email and tenant) maybe find better way?
 
         </main>
 

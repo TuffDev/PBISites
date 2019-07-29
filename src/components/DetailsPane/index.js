@@ -24,11 +24,12 @@ import ViewColumn from '@material-ui/icons/ViewColumn';
 import IconButton from '@material-ui/core/IconButton';
 import Select from '@material-ui/core/Select'
 import MenuItem from '@material-ui/core/MenuItem';
-import Modal from "@material-ui/core/Modal";
+import SiteModal from './SiteModal';
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
 import Button from "@material-ui/core/Button";
+import {Icon} from "@material-ui/core";
 
 const tableIcons = {
   Add: forwardRef((props, ref) => <AddBox {...props} ref={ref}/>),
@@ -50,30 +51,6 @@ const tableIcons = {
   ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref}/>)
 };
 
-const classes = theme => ({
-  root: {
-    display: 'flex',
-  },
-  container: {
-    paddingTop: theme.spacing(4),
-    paddingBottom: theme.spacing(4),
-  },
-  paper: {
-    position: 'absolute',
-    width: '100',
-    backgroundColor: theme.palette.background.paper,
-    padding: theme.spacing(2, 4, 4),
-    outline: 'none',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-  },
-  submit: {
-    margin: theme.spacing(3, 0, 2),
-    backgroundColor: '#6c757f',
-  },
-
-});
 
 class DetailsPane extends Component {
   constructor(props) {
@@ -96,9 +73,17 @@ class DetailsPane extends Component {
       .then((data) => this.setState({sites: data}));
   }
 
-  addUserSite(event){
-    event.preventDefault();
-    this.API.addSiteUser(this.props.UserKey, )
+
+  toggleModal() {
+    this.setState({modalIsOpen: !this.state.modalIsOpen});
+    // refresh on modal close
+    if (!this.state.modalIsOpen) {
+      this.API.getDetails(this.props.UserKey)
+        .then((data) => {
+            this.setState({jsonData: data});
+          }
+        );
+    }
   }
 
   render() {
@@ -107,12 +92,16 @@ class DetailsPane extends Component {
     }
     return (
       <div>
+        <IconButton onClick={() => this.toggleModal()}>
+          <AddBox/>
+        </IconButton>
         <MaterialTable
           columns={[
             {title: 'Site Name', field: 'Site'},
             {title: 'GUID', field: 'SiteID'},
             {title: 'ID', field: 'SiteKey'},
           ]}
+          icons={tableIcons}
           data={this.state.jsonData}
           options={{
             search: false,
@@ -121,36 +110,33 @@ class DetailsPane extends Component {
             toolbar: false,
             paging: false,
           }}
+          editable={{
+            onRowDelete: oldData =>
+              new Promise((resolve, reject) => {
+                this.API.removeSiteUser(this.props.UserKey, oldData.SiteKey)
+                  .then((success) => {
+                    if (success) {
+                      const data = this.state.jsonData;
+                      const index = data.indexOf(oldData);
+                      data.splice(index, 1);
+                      this.setState({jsonData: data}, () => resolve())
+                    }
+                  })
+              })
+          }}
+          localization={{
+            body: {
+              editRow: {
+                deleteText: 'Are you sure?'
+              }
+            }
+          }}
         />
-
-        <Modal
-          aria-labelledby="simple-modal-title"
-          aria-describedby="simple-modal-description"
-          open={this.state.modalIsOpen}
-          onClose={() => this.setState({modalIsOpen: false})}
-        >
-          <Paper className={classes.paper}>
-            <Typography variant="h6">Upload your site file</Typography>
-            <Divider/>
-            <form className={classes.container} onSubmit={this.addUserSite}>
-              <Select
-
-              >
-              </Select>
-              <Button
-                disabled={false}
-                type="submit"
-                variant="contained"
-                className={classes.submit}
-              >
-                Submit
-              </Button>
-            </form>
-          </Paper>
-        </Modal>
+        <SiteModal open={this.state.modalIsOpen} toggle={() => this.toggleModal()} UserKey={this.props.UserKey}
+                   sites={this.state.sites} API={this.API}/>
       </div>
     )
   }
 }
 
-export default withStyles(classes)(DetailsPane)
+export default (DetailsPane)

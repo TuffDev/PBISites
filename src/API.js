@@ -142,18 +142,36 @@ class API {
 
   addSiteUser(UserKey, SiteKey) {
     return (
-      this.postData('https://pbisite.azure-api.net/sites/users', {sitekey: SiteKey, userkey: UserKey})
+      this.putData('https://pbisite.azure-api.net/sites/users', {sitekey: SiteKey, userkey: UserKey})
         .then(data => {
           console.log("data: " + JSON.stringify(data));
           if (data.ok) {
-            return data.json();
+            return true;
           } else {
             throw new Error('Something went wrong adding site user');
           }
         })
         .catch(error => {
           console.error(error);
-          return null;
+          return false;
+        })
+    )
+  }
+
+  removeSiteUser(UserKey, SiteKey) {
+    return (
+      this.deleteData('https://pbisite.azure-api.net/SITEUSER', {SiteKey: SiteKey, UserKey: UserKey})
+        .then(data => {
+          console.log("data: " + JSON.stringify(data));
+          if (data.ok) {
+            return true;
+          } else {
+            throw new Error('Something went wrong removing site user');
+          }
+        })
+        .catch(error => {
+          console.error(error);
+          return false;
         })
     )
   }
@@ -248,6 +266,7 @@ class API {
       body: data,
     })
   }
+
 
 
 }

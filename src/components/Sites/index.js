@@ -122,7 +122,7 @@ class Sites extends Component {
     event.preventDefault();
     const newData = this.state.jsonData;
     this.API.uploadFile(this.state.file)
-      .then( (data) => {
+      .then((data) => {
         //newData.push({Site: this.state.file.name, SiteID: "test site", SiteKey: 5});
         //this.setState({modalIsOpen: false, file: null});
       })
@@ -145,13 +145,6 @@ class Sites extends Component {
           data={this.state.jsonData}  //todo make this a Promise
           icons={tableIcons}
           title="Manage Sites"
-          // detailPanel={[
-          //         //   {
-          //         //     tooltip: "Show Sites",
-          //         //     render: rowData => <SiteDetailPane SiteKey={rowData.SiteKey}/>
-          //         //   }
-          //         // ]}
-          // onRowClick={(event, rowData, togglePanel) => togglePanel()}
           editable={{
             onRowDelete: oldData =>
               new Promise((resolve, reject) => {
@@ -165,6 +158,9 @@ class Sites extends Component {
                     } else reject();
                   })
               })
+          }}
+          options={{
+            pageSize: 10,
           }}
           localization={{
             body: {

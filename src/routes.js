@@ -8,6 +8,8 @@ import Configuration from './components/Configuration';
 import SignUp from './SignUp'
 import * as ROUTES from './constants/routes';
 
+
+
 export default props => (
     <Switch>
       <Route exact path={ROUTES.DASHBOARD} component={Home}/>

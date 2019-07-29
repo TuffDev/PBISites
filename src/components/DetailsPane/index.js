@@ -107,9 +107,6 @@ class DetailsPane extends Component {
     }
     return (
       <Container>
-        <IconButton aria-label="add" onClick={this.setState({modalIsOpen: true})}>
-          <AddBox/>
-        </IconButton>
         <MaterialTable
           columns={[
             {title: 'Site Name', field: 'Site'},
@@ -154,7 +151,6 @@ class DetailsPane extends Component {
       </Container>
     )
   }
-
 }
 
 export default withStyles(classes)(DetailsPane)

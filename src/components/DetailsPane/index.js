@@ -106,7 +106,7 @@ class DetailsPane extends Component {
       return <div>Loading...</div>
     }
     return (
-      <Container>
+      <div>
         <MaterialTable
           columns={[
             {title: 'Site Name', field: 'Site'},
@@ -148,7 +148,7 @@ class DetailsPane extends Component {
             </form>
           </Paper>
         </Modal>
-      </Container>
+      </div>
     )
   }
 }

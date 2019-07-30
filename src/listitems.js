@@ -31,19 +31,16 @@ class MainListItems extends Component {
             <ListItemIcon>
               <DashboardIcon/>
             </ListItemIcon>
-            <ListItemText primary="Home"/>
           </ListItem>
           <ListItem button onClick={()=>{this.onClick(ROUTES.CONFIGURATION)}}>
             <ListItemIcon>
               <SettingsIcon/>
             </ListItemIcon>
-            <ListItemText primary="Configuration"/>
           </ListItem>
           <ListItem button onClick={()=>{this.onClick(ROUTES.ACCOUNT)}}>
             <ListItemIcon>
               <PeopleIcon/>
             </ListItemIcon>
-            <ListItemText primary="Account"/>
           </ListItem>
         </div>
       </List>)

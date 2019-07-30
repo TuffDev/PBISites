@@ -6,7 +6,6 @@ class Auth {
     return !!b2cauth.getAccessToken();
   }
 
-
   logout() {
     b2cauth.signOut();
   }

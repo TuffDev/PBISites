@@ -8,10 +8,12 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Toolbar from './Toolbar';
+import {compose} from 'recompose';
 
 import * as pbi from 'powerbi-client';
 
 import {withStyles} from "@material-ui/core";
+import {withWidth} from "@material-ui/core";
 
 
 const classes = theme => {
@@ -41,15 +43,24 @@ class Embed extends Component {
     this.API = new API();
     this.report = null;
 
+    let mobileView = props.width === "sm" || props.width === "xs";
     this.state = {
       embedConfig: {
         id: null,
         embedUrl: "https://app.powerbi.com/reportEmbed",
-        accessToken: null
+        accessToken: null,
       },
       pages: [''],
       currentPage: 0,
       error: false,
+      mobileView: mobileView,
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.props.width !== prevProps.width) {
+      let mobileView = this.props.width === "sm" || this.props.width === "xs"
+      this.setState({mobileView: mobileView});
     }
   }
 
@@ -71,9 +82,6 @@ class Embed extends Component {
       )
   }
 
-  handleReportLoad = (report) => {
-    console.log(report);
-  };
 
   handleReportRender = (report) => {
     this.report = report; // get the object from callback and store it.
@@ -94,7 +102,7 @@ class Embed extends Component {
 
     const isReady = !!this.report;
     let currentPage = 0;
-
+    const layoutType = this.state.mobileView ? pbi.models.LayoutType.MobilePortrait : pbi.models.LayoutType.Master;
     return (
       <div>
         <AppBar position="static">
@@ -121,14 +129,13 @@ class Embed extends Component {
             height: 800
           }}
           onRender={this.handleReportRender}
-          onLoad={this.handleReportLoad}
           extraSettings={{
             filterPaneEnabled: false,
             navContentPaneEnabled:
               false,
             background:
             pbi.models.BackgroundType.Transparent,
-
+            layoutType: layoutType,
           }}
         />
       </div>
@@ -136,4 +143,4 @@ class Embed extends Component {
   }
 }
 
-export default withStyles(classes)(Embed)
+export default compose(withWidth(), withStyles(classes))(Embed)

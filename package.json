@@ -16,7 +16,8 @@
     "react-powerbi": "^0.4.1",
     "react-router-dom": "^5.0.1",
     "react-scripts": "3.0.1",
-    "recharts": "^1.6.2"
+    "recharts": "^1.6.2",
+    "recompose": "^0.30.0"
   },
   "scripts": {
     "start": "react-scripts start",

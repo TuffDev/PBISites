@@ -110,8 +110,8 @@ class Sites extends Component {
     this.setState({file: event.target.files[0]})
   }
 
-  openModal() {
-    this.setState({modalIsOpen: true});
+  toggleModal() {
+    this.setState({modalIsOpen: !this.state.modalIsOpen});
   }
 
   handleRowClick(rowData) {
@@ -125,7 +125,8 @@ class Sites extends Component {
       .then((data) => {
         //newData.push({Site: this.state.file.name, SiteID: "test site", SiteKey: 5});
         //this.setState({modalIsOpen: false, file: null});
-      })
+      });
+    this.toggleModal();
   };
 
   render() {
@@ -174,22 +175,21 @@ class Sites extends Component {
               icon: () => <CloudUpload/>,
               tooltip: 'Upload New Site',
               isFreeAction: true,
-              onClick: () => this.openModal(),
+              onClick: () => this.toggleModal(),
             }
           ]}
           onRowClick={(event, rowData, togglePanel) => this.handleRowClick(rowData)}
         />
 
-
         <Modal
           aria-labelledby="simple-modal-title"
           aria-describedby="simple-modal-description"
           open={this.state.modalIsOpen}
-          onClose={() => this.setState({modalIsOpen: false})}
+          onClose={() => this.toggleModal()}
         >
           <Paper className={classes.paper}>
             <Typography variant="h6">Upload your site file</Typography>
-            <Divider/>
+            <Divider />
             <form className={classes.container} onSubmit={this.handleUpload}>
               <input type="file" id="fileinput" accept=".pbix" onChange={this.handleFileSelect}/>
               <Button

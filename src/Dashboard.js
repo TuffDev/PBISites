@@ -20,6 +20,7 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import Button from '@material-ui/core/Button';
 import Auth from './Auth';
+import API from './API';
 import Routes from './routes';
 import {Route, BrowserRouter, Switch} from 'react-router-dom'
 
@@ -30,8 +31,9 @@ import SignUp from './SignUp'
 import * as ROUTES from "./constants/routes";
 import Account from "./components/Account";
 
-const drawerWidth = 240;
+const drawerWidth = 70;
 const auth = new Auth();
+const api = new API();
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -65,10 +67,12 @@ const useStyles = makeStyles(theme => ({
   },
   menuButton: {
     marginRight: 36,
+    display: 'initial',
+    [theme.breakpoints.up('sm')]: {
+      display: 'none',
+    },
   },
-  menuButtonHidden: {
-    display: 'none',
-  },
+
   title: {
     flexGrow: 1,
   },
@@ -87,9 +91,9 @@ const useStyles = makeStyles(theme => ({
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
     }),
-    width: theme.spacing(7),
+    width: theme.spacing(0),
     [theme.breakpoints.up('sm')]: {
-      width: theme.spacing(9),
+      width: theme.spacing(7),
     },
   },
   appBarSpacer: theme.mixins.toolbar,
@@ -123,11 +127,10 @@ export default function Dashboard() {
   const handleDrawerClose = () => {
     setOpen(false);
   };
+
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
   if (auth.isLoggedIn()) {
-
-    const authToken = auth.getToken();
 
     return (
       <div className={classes.root}>
@@ -142,7 +145,7 @@ export default function Dashboard() {
               color="inherit"
               aria-label="Open drawer"
               onClick={handleDrawerOpen}
-              className={clsx(classes.menuButton, open && classes.menuButtonHidden)}
+              className={classes.menuButton}
             >
               <MenuIcon/>
             </IconButton>
@@ -175,13 +178,14 @@ export default function Dashboard() {
 
           <Divider/>
 
-          <MainListItems/>
+          <MainListItems  user={api.getUser()}/>
+          {/*//todo auth render*/}
 
         </Drawer>
         <main className={classes.content}>
 
           <div className={classes.appBarSpacer}/>
-          <Routes />
+          <Routes user={api.getUser()} />
 
         </main>
 

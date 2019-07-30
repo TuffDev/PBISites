@@ -13,7 +13,6 @@ class API {
         'Authorization': 'Bearer ' + this.auth.getToken(),
       },
     })
-
   }
 
   postData(url = '', data = {}) {
@@ -27,6 +26,7 @@ class API {
       body: JSON.stringify(data),
     })
   }
+
 
   putData(url = '', data = {}) {
     return fetch(url, {
@@ -82,10 +82,21 @@ class API {
   }
 
   getUser() {
-    this.auth.currentUser();
-    // return (
-    //   this.postData('https://pbisite.azure-api.net/users', {"email": })
-    // )
+    return (
+      this.postData('https://pbisite.azure-api.net/users', {})
+        .then(data => {
+          if (data.ok) {
+            return data.json();
+          } else {
+            throw new Error('Something went wrong getting User Sites');
+          }
+        })
+        .catch((error) => {
+          console.error("get details error" + error);
+          const empty = [{}];
+          return (empty);
+        })
+    )
   }
 
   addUser(userData) { // returns a boolean
@@ -126,7 +137,6 @@ class API {
     return (
       this.getData('https://pbisite.azure-api.net/sites')
         .then(data => {
-          console.log("data: " + JSON.stringify(data));
           if (data.ok) {
             return data.json();
           } else {
@@ -266,7 +276,6 @@ class API {
       body: data,
     })
   }
-
 
 
 }

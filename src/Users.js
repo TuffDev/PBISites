@@ -1,14 +1,6 @@
 /* eslint-disable no-script-url */
 
 import React, {Component} from 'react';
-import Link from '@material-ui/core/Link';
-import {makeStyles} from '@material-ui/core/styles';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import Title from './Title';
 import MaterialTable from "material-table";
 import API from './API';
 import DetailsPane from './components/DetailsPane';
@@ -43,6 +35,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import OutlinedInput from '@material-ui/core/OutlinedInput';
 import FormControl from '@material-ui/core/FormControl';
 import MenuItem from '@material-ui/core/MenuItem';
+import {CircularProgress} from "@material-ui/core";
 
 const classes = theme => ({
   root: {
@@ -70,7 +63,11 @@ const classes = theme => ({
     margin: theme.spacing(1),
     minWidth: 120,
   },
-
+  loading: {
+    top: '50%',
+    left: '50%',
+    position: 'absolute',
+  },
 });
 
 const tableIcons = {
@@ -133,7 +130,7 @@ class Users extends Component {
 
   createUser = event => {
     event.preventDefault();
-    const { email, password, firstname, lastname, role } = this.state;
+    const {email, password, firstname, lastname, role} = this.state;
     const data = {
       role: role,
       FirstName: firstname,
@@ -160,7 +157,7 @@ class Users extends Component {
     const {email, password, firstname, lastname, role} = this.state;
     const submitDisabled = !!!email || !!!password || !!!firstname || !!!lastname || !!!role;
     if (!this.state.jsonData) {
-      return <div>Loading...</div>
+      return <CircularProgress className={classes.loading}/>
     }
 
     return (

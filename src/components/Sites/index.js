@@ -1,27 +1,18 @@
 /* eslint-disable no-script-url */
 
 import React, {Component} from 'react';
-import Link from '@material-ui/core/Link';
-import {makeStyles} from '@material-ui/core/styles';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
 import MaterialTable from "material-table";
 import API from './../../API';
-import SiteDetailPane from './../SiteDetailPane';
-import MTableToolbar from 'material-table';
 import {forwardRef} from 'react';
 import {withStyles} from '@material-ui/core/styles';
 import {withRouter} from 'react-router-dom';
-
 import AddBox from '@material-ui/icons/AddBox';
 import ArrowUpward from '@material-ui/icons/ArrowUpward';
 import Check from '@material-ui/icons/Check';
 import ChevronLeft from '@material-ui/icons/ChevronLeft';
 import ChevronRight from '@material-ui/icons/ChevronRight';
 import Clear from '@material-ui/icons/Clear';
+import CircularProgress from '@material-ui/core/CircularProgress'
 import DeleteOutline from '@material-ui/icons/DeleteOutline';
 import Edit from '@material-ui/icons/Edit';
 import FilterList from '@material-ui/icons/FilterList';
@@ -62,6 +53,11 @@ const tableIcons = {
 const classes = theme => ({
   root: {
     display: 'flex',
+  },
+  loading: {
+    top: '50%',
+    left: '50%',
+    position: 'absolute',
   },
   container: {
     paddingTop: theme.spacing(4),
@@ -130,11 +126,11 @@ class Sites extends Component {
   };
 
   render() {
-    if (!this.state.jsonData) {
-      return <div>Loading...</div>
-    }
     const {classes} = this.props;
     const invalid = !!!this.state.file;
+    if (!this.state.jsonData) {
+      return <CircularProgress className={classes.loading}/>
+    }
 
     return (
       <div>
@@ -189,7 +185,7 @@ class Sites extends Component {
         >
           <Paper className={classes.paper}>
             <Typography variant="h6">Upload your site file</Typography>
-            <Divider />
+            <Divider/>
             <form className={classes.container} onSubmit={this.handleUpload}>
               <input type="file" id="fileinput" accept=".pbix" onChange={this.handleFileSelect}/>
               <Button

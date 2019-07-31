@@ -127,6 +127,9 @@ export default function Dashboard() {
   const handleDrawerClose = () => {
     setOpen(false);
   };
+  const handlePageClick = () => {
+    setOpen(false);
+  };
 
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
@@ -178,8 +181,7 @@ export default function Dashboard() {
 
           <Divider/>
 
-          <MainListItems  user={api.getUser()}/>
-          {/*//todo auth render*/}
+          <MainListItems onClick={() => handlePageClick()} user={api.getUser()}/>
 
         </Drawer>
         <main className={classes.content}>

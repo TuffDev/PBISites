@@ -1,6 +1,5 @@
 {
   "name": "azure_ad_test",
-  "homepage" : "https://tuffdev.github.io/PBISites/build",
   "version": "0.1.0",
   "private": true,
   "dependencies": {

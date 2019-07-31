@@ -13,7 +13,7 @@ b2cauth.initialize({
     applicationId: '6908540a-bbe1-4381-b9a5-76f01658f0a7',
     cacheLocation: 'sessionStorage',
     scopes: ['https://pbisites.onmicrosoft.com/api/user_impersonation'],
-    redirectUri: 'http://localhost:3000',
+    redirectUri: 'https://pbisites.azurewebsites.net',
     postLogoutRedirectUri: window.location.origin,
   });
 

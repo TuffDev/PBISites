@@ -59,7 +59,7 @@ class Configuration extends Component {
   componentWillMount() {
     this.API.getApp()
       .then( data => {
-        if (data.length > 0) {
+        if (!!data && data.length > 0) {
           const {Tenant, ClientID, ClientSecret} = data[0];
           this.setState({tenant: Tenant, clientID: ClientID, clientSecret: ClientSecret});
         }
